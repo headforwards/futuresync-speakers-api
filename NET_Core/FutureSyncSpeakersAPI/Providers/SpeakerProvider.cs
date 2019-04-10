@@ -16,11 +16,12 @@ namespace FutureSyncSpeakersAPI.Providers
                 {
                     Name = htmlNode.Descendants("h2").First().InnerText,
                     Description = htmlNode.Descendants("p").First().InnerText,
-                    ImageUrl = htmlNode.Descendants("img").First().Attributes["src"].Value,
-                    TalkUrl = htmlNode.Descendants("a").First().Attributes["href"].Value,
-                    IsKeyNote = htmlNode.Attributes["class"].Value.Contains("speaker--keynote")
+                    ImageUrl = $"https://futuresync.co.uk{htmlNode.Descendants("img").First().Attributes["src"].Value}",
+                    Track = htmlNode.ParentNode.SelectSingleNode("preceding-sibling::h1[1]").InnerText
                 };
-                speaker.Talk = TalkProvider.FromSpeaker(speaker);
+
+                speaker.Talk = TalkProvider.FromTalkUrl(htmlNode.Descendants("a").First().Attributes["href"].Value);
+
                 return speaker;
             }
             catch (Exception ex)
@@ -42,7 +43,6 @@ namespace FutureSyncSpeakersAPI.Providers
                     var speaker = FromHtmlNode(htmlNode);
                     if (speaker != null)
                     {
-                        speaker.Talk = TalkProvider.FromSpeaker(speaker);
                         speakers.Add(speaker);
                     }
                 }

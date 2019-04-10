@@ -39,7 +39,7 @@ namespace FutureSyncSpeakersAPI.Tests.Providers
             var speaker = SpeakerProvider.FromHtmlNode(speakerNode);
 
             Assert.IsTrue(
-                speaker.IsKeyNote,
+                speaker.Track.Equals("keynote"),
                 "Expected speaker to be keynote");
         }
 

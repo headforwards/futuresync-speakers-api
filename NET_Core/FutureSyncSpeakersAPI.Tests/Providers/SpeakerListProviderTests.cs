@@ -16,11 +16,11 @@ namespace FutureSyncSpeakersAPI.Tests.Providers
             var speakers = SpeakerListProvider.AllSpeakers(htmlDocument);
 
             Assert.IsTrue(
-                speakers.Count(o => o.IsKeyNote) == 1,
+                speakers.Count(o => o.Track == "keynote") == 1,
                 "Expected a single keynote speaker");
 
             Assert.IsTrue(
-                speakers.Any(o => !o.IsKeyNote),
+                speakers.Any(o => o.Track != "keynote"),
                 "Expected speakers who are not keynotes");
         }
 

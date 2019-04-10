@@ -8,18 +8,18 @@ namespace FutureSyncSpeakersAPI.Providers
 {
     public static class TalkProvider
     {
-        public static Talk FromSpeaker(Speaker speaker)
+        public static Talk FromTalkUrl(string url)
         {
             try
             {
-                var talkDocument = HtmlDocumentFactory.FromUrl(speaker.TalkUrl);
+                var talkDocument = HtmlDocumentFactory.FromUrl(url);
 
                 var container = talkDocument.DocumentNode.SelectNodes("//div[@class='container']").FirstOrDefault();
 
                 var talk = new Talk
                 {
                     Title = container.Descendants("h1").First().InnerText ?? "No Title",
-                    TalkUrl = speaker.TalkUrl
+                    TalkUrl = url
                 };
 
                 StringBuilder description = new StringBuilder();
@@ -31,11 +31,11 @@ namespace FutureSyncSpeakersAPI.Providers
                         description.AppendLine(text);
                 }
 
-                talk.Description = description.ToString();
+                talk.Description = description.ToString().Trim();
 
                 if (string.IsNullOrEmpty(talk.Description))
                 {
-                    throw new TalkProviderException($"Failed to retrieve description for talk: '{speaker.TalkUrl}'");
+                    throw new TalkProviderException($"Failed to retrieve description for talk: '{url}'");
                 }
 
                 return talk;
@@ -43,7 +43,7 @@ namespace FutureSyncSpeakersAPI.Providers
             catch (Exception ex)
             {
                 throw new TalkProviderException(
-                    $"FromSpeaker Failed: '{speaker?.Name ?? "Null Speaker"}'",
+                    $"FromTalkUrlFailed: '{url ?? "Null Url"}'",
                     ex);
             }
         }
