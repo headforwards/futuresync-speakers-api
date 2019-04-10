@@ -1,5 +1,6 @@
 ﻿using FutureSyncSpeakersAPI.Scrapers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace FutureSyncSpeakersAPI.Tests.Scrapers
 {
@@ -7,19 +8,37 @@ namespace FutureSyncSpeakersAPI.Tests.Scrapers
     public class HtmlDocumentFactoryTests
     {
         [TestMethod]
-        public void ReturnsHtmlDocumentFromUrl()
+        public void HtmlDocumentFactory_FromUrl()
         {
-            var result = HtmlDocumentFactory.FromUrl("https://futuresync.co.uk/");
+            var result = HtmlDocumentFactory.FromUrl(Constants.FutureSyncUrl);
 
-            Assert.IsNotNull(result);
+            Assert.IsNotNull(
+                result,
+                "Expected to be able to retrieve document from url (requires web connection)");
         }
 
         [TestMethod]
-        public void ReturnsHtmlDocumentFromPath()
+        [ExpectedException(typeof(HtmlDocumentFactoryException))]
+        public void HtmlDocumentFactory_FromUrl_Invalid()
         {
-            var result = HtmlDocumentFactory.FromPath("./Samples/futuresync.html");
+            _ = HtmlDocumentFactory.FromUrl(Guid.NewGuid().ToString());
+        }
 
-            Assert.IsNotNull(result);
+        [TestMethod]
+        public void HtmlDocumentFactory_FromPath()
+        {
+            var result = HtmlDocumentFactory.FromPath(Constants.SampleFutureSyncFilePath);
+
+            Assert.IsNotNull(
+                result,
+                "Expected to be able to retrieve document from path");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(HtmlDocumentFactoryException))]
+        public void HtmlDocumentFactory_FromPath_Invalid()
+        {
+            _ = HtmlDocumentFactory.FromPath(Guid.NewGuid().ToString());
         }
     }
 }

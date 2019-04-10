@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using HtmlAgilityPack;
 
 namespace FutureSyncSpeakersAPI.Scrapers
@@ -10,6 +11,27 @@ namespace FutureSyncSpeakersAPI.Scrapers
         public Scraper(HtmlDocument htmlDocument)
         {
             HtmlDocument = htmlDocument ?? throw new ArgumentNullException(nameof(htmlDocument));
+        }
+
+        public HtmlNode KeyNote
+        {
+            get
+            {
+                return HtmlDocument
+                    .DocumentNode
+                    .SelectNodes("//div[@class='speaker speaker--keynote']")
+                    .FirstOrDefault();
+            }
+        }
+
+        public HtmlNodeCollection Speakers
+        {
+            get
+            {
+                return HtmlDocument
+                    .DocumentNode
+                    .SelectNodes("//div[@class='speaker']");
+            }
         }
     }
 }

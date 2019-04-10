@@ -1,27 +1,54 @@
-﻿using System;
-using FutureSyncSpeakersAPI.Scrapers;
+﻿using FutureSyncSpeakersAPI.Scrapers;
+using HtmlAgilityPack;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Linq;
 
 namespace FutureSyncSpeakersAPI.Tests.Scrapers
 {
     [TestClass]
     public class ScraperTests
     {
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void Ctor_null_htmlDocument()
+        private HtmlDocument htmlDocument;
+        private Scraper scraper;
+
+        [TestInitialize]
+        public void Init()
         {
-           _ = new Scraper(null);
+            htmlDocument = HtmlDocumentFactory.FromPath(Constants.SampleFutureSyncFilePath);
+            scraper = new Scraper(htmlDocument);
         }
 
         [TestMethod]
-        public void Ctor_Success()
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Scraper_Ctor_Null_Args()
         {
-            var htmlDocument = HtmlDocumentFactory.FromPath("./Samples/futuresync.html");
+            _ = new Scraper(null);
+        }
 
-            var scraper = new Scraper(htmlDocument);
+        [TestMethod]
+        public void Scraper_Ctor_Success()
+        {
+            Assert.AreSame(
+                htmlDocument,
+                scraper.HtmlDocument,
+                "HtmlDocument property not set");
+        }
 
-            Assert.AreSame(htmlDocument, scraper.HtmlDocument, "HtmlDocument property not set");
+        [TestMethod]
+        public void Scraper_KeyNote()
+        {
+            Assert.IsNotNull(
+                scraper.KeyNote,
+                "Failed to retrieve KeyNote HtmlNode");
+        }
+
+        [TestMethod]
+        public void Scraper_Speakers()
+        {
+            Assert.IsTrue(
+                scraper.Speakers?.Any() ?? false,
+                "Failed to retrieve speakers");
         }
     }
 }

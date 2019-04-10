@@ -1,5 +1,5 @@
-﻿using System;
-using HtmlAgilityPack;
+﻿using HtmlAgilityPack;
+using System;
 
 namespace FutureSyncSpeakersAPI.Scrapers
 {
@@ -7,15 +7,33 @@ namespace FutureSyncSpeakersAPI.Scrapers
     {
         public static HtmlDocument FromUrl(string url)
         {
-            var web = new HtmlWeb();
-            return web.Load(url);
+            try
+            {
+                var web = new HtmlWeb();
+                return web.Load(url);
+            }
+            catch (Exception ex)
+            {
+                throw new HtmlDocumentFactoryException(
+                    $"FromUrl failed with the arguments: path='{url}'",
+                    ex);
+            }
         }
 
         public static HtmlDocument FromPath(string path)
         {
-            var doc = new HtmlDocument();
-            doc.Load(path);
-            return doc;
+            try
+            {
+                var doc = new HtmlDocument();
+                doc.Load(path);
+                return doc;
+            }
+            catch (Exception ex)
+            {
+                throw new HtmlDocumentFactoryException(
+                    $"FromPath failed with the arguments: path='{path}'",
+                    ex);
+            }
         }
     }
 }
