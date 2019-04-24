@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewData["Title"] = "Reset";
+}
+
+<h1>Reset</h1>
+
+<p id="progress">In Progress...</p>
+
+<script src="https://www.gstatic.com/firebasejs/5.10.0/firebase.js"></script>
+<script>
+
+    var config = {
+        apiKey: "AIzaSyAbEmZk8AWgZVUQWMLdnADIY8kfXJCAvRE",
+        authDomain: "futuresync2019.firebaseapp.com",
+        databaseURL: "https://futuresync2019.firebaseio.com",
+        projectId: "futuresync2019",
+        storageBucket: "futuresync2019.appspot.com",
+        messagingSenderId: "622766030327"
+    };
+
+    firebase.initializeApp(config);
+
+    var database = firebase.database();
+
+    database.ref().remove();
+
+    fetch('/api/speakers')
+        .then(response => response.json())
+        .then(data => {
+
+            data.forEach(speaker => {
+                var speakerRef = database.ref('speakers').push();
+                speakerRef.set(speaker);
+            })
+
+            document.getElementById("progress").innerHTML = "Complete";
+        }
+        );
+</script>
