@@ -30,8 +30,11 @@
         .then(data => {
 
             data.forEach(speaker => {
-                var speakerRef = database.ref('speakers').push();
-                speakerRef.set(speaker);
+                let id = 1;
+                data.forEach(speaker => {
+                    speaker.id = id++;
+                    database.ref('speakers  /' + speaker.id).set(speaker);
+                })
             })
 
             document.getElementById("progress").innerHTML = "Complete";
